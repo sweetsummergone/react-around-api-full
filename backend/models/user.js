@@ -17,11 +17,11 @@ const userSchema = new mongoose.Schema({
   },
   about: {
     type: String,
-    default: 'https://pictures.s3.yandex.net/resources/avatar_1604080799.jpg',
+    default: 'guitarist',
   },
   avatar: {
     type: String,
-    default: 'guitarist',
+    default: 'https://pictures.s3.yandex.net/resources/avatar_1604080799.jpg',
   },
 });
 

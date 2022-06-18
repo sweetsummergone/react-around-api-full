@@ -1,177 +1,127 @@
-import React, { useEffect } from "react";
-import Header from "./Header";
-import Main from "./Main";
-import Footer from "./Footer";
-import ImagePopup from "./ImagePopup";
-import EditProfilePopup from "./EditProfilePopup";
-import EditAvatarPopup from "./EditAvatarPopup";
+import React, { Fragment, useEffect, useState, useReducer } from "react";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import spinner from "../images/spinner.svg";
+
+import * as auth from "../utils/auth";
+import * as ACTIONS from "../store/actions/actions";
+import * as AuthReducer from "../store/reducers/authReducer";
+
 import CurrentUserContext from "../contexts/CurrentUserContext";
-import api from "../utils/api";
-import AddPlacePopup from "./AddPlacePopup";
+
+import Content from "./Content";
+import Register from "./Register";
+import Login from "./Login";
+import ProtectedRoute from "./ProtectedRoute";
+import Logout from "./Logout";
 
 function App() {
-  const [currentUser, setCurrentUser] = React.useState({});
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
-  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
-  const [selectedCard, setSelectedCard] = React.useState({});
-  const [isUserDataLoading, setIsUserDataLoding] = React.useState(true);
-  
-  const [cards, setCards] = React.useState([]);
-  const [isCardsLoading, setIsCardsLoading] = React.useState(true);
-  
-  function handleEditProfileClick() {
-    setIsEditProfilePopupOpen(true);
-  }
+  const [stateAuthReducer, dispatchAuthReducer] = useReducer(
+    AuthReducer.AuthReducer,
+    AuthReducer.initialState
+  );
+  const [isDataLoading, setIsDataLoading] = useState(true);
 
-  function handleAddPlaceClick() {
-    setIsAddPlacePopupOpen(true);
-  }
+  const checkToken = (token) => {
+    return auth.checkToken(token);
+  };
 
-  function handleEditAvatarClick() {
-    setIsEditAvatarPopupOpen(true);
-  }
-
-  function handleCardClick(card) {
-    setSelectedCard(card);
-  }
-
-  function handleUpdateUser({name, about}) {
-    api.updateUser({
-      name: name,
-      whois: about
+  const handleLogin = (token) => {
+    checkToken(token)
+    .then((user) => {
+      if (user.email) {
+        dispatchAuthReducer(ACTIONS.login({ user, token }));
+      }
     })
-      .then(res => {
-        setCurrentUser(res);
-        closeAllPopups()
-      })
-      .catch(err => {
-        console.error(err);
-      });
-  }
+    .catch((err) => console.error(err));
+  };
 
-  function handleUpdateAvatar(avatar) {
-    api.updateAvatar(avatar.url)
-      .then(res => {
-        setCurrentUser(res);
-        closeAllPopups();
-      })
-      .catch(err => {
-        console.error(err);
-      });
-  }
+  const handleLogout = () => {
+    dispatchAuthReducer(ACTIONS.logout());
+  };
 
-  
-  function handleCardLike(card) {
-    // Check one more time if this card was already liked
-    const isLiked = card.likes.some(user => user._id === currentUser._id);
-    
-    // Send a request to the API and getting the updated card data
-    if (isLiked) {
-      api.removeLike(card._id)
-          .then(newCard => {
-              setCards((state) => state.map((currentCard) => currentCard._id === card._id ? newCard : currentCard));
-          })
-          .catch(err => {
-              console.error(err);
-          });
-    } else {
-      api.addLike(card._id)
-          .then(newCard => {
-              setCards((state) => state.map((currentCard) => currentCard._id === card._id ? newCard : currentCard));
-          })
-          .catch(err => {
-              console.error(err);
-          });
-    } 
-  } 
-
-  function handleCardDelete(cardId) {
-    api.deleteCard(cardId)
-        .then(() => {
-            setCards(cards.filter(card => card._id !== cardId));
-        })
-        .catch(err => {
-            console.error(err);
-        });
-  }
-
-  function handleAddPlaceSubmit({title, url}) {
-    api.saveCard({title, url})
-      .then(res => {
-        setCards([res, ...cards]); 
-        closeAllPopups();
-      })
-      .catch(err => {
-        console.error(err);
-      });
-  }
-
-  function closeAllPopups() {
-    setIsEditProfilePopupOpen(false);
-    setIsAddPlacePopupOpen(false);
-    setIsEditAvatarPopupOpen(false);
-    setSelectedCard({});
+  const handleEdit = (data) => {
+    dispatchAuthReducer(ACTIONS.edit(data));
   }
 
   useEffect(() => {
-    function handleEscape(evt) {
-      if (evt.key === 'Escape') {
-        closeAllPopups();
-      }
+    if (localStorage.getItem("jwt")) {
+      const token = localStorage.getItem("jwt");
+      checkToken(token)
+        .then((user) => {
+          if (user.email) {
+            dispatchAuthReducer(ACTIONS.login({ user, token }));
+          }
+        })
+        .catch((err) => console.error(err))
+        .finally(() => setIsDataLoading(false));
+    } else {
+      setIsDataLoading(false);
     }
-
-    document.addEventListener("keydown", handleEscape)
-
-    api.getUser()
-        .then((res) => {
-            setCurrentUser(res);
-        })
-        .catch(err => {
-            console.error(err);
-        })
-        .finally(() => {
-            setIsUserDataLoding(false);
-        });
-    
-    api.getCards()
-        .then(res => {
-            setCards(res);
-        })
-        .catch(err => {
-            console.error(err);
-        })
-        .finally(() => {
-            setIsCardsLoading(false);
-        });
-
-    return (() => {
-      document.removeEventListener("keydown", handleEscape)
-    })
   }, []);
 
+  if (isDataLoading) {
+    return (
+      <div className='loading'>
+        <img src={spinner} alt='Loading spinner' className='loading__spinner' />
+      </div>
+    );
+  }
   return (
-    <div className="App">
-      <CurrentUserContext.Provider value={currentUser}>
-        <div className="page">
-          <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} /> 
-          {isCardsLoading || isUserDataLoading ?  <></> : (<EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}/>)}
-          <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit}/>
-          <ImagePopup onClose={closeAllPopups} card={selectedCard}/>
-
-          <Header />
-          <Main isDataLoading={isUserDataLoading || isCardsLoading} 
-                onEditProfileClick={handleEditProfileClick} 
-                onAddPlaceClick={handleAddPlaceClick} 
-                onEditAvatarClick={handleEditAvatarClick} 
-                onCardClick={handleCardClick}
-                onCardLike={handleCardLike}
-                onCardDelete={handleCardDelete}
-                cards={cards} />
-          <Footer />
-        </div>
-      </CurrentUserContext.Provider>
-    </div>
+    <CurrentUserContext.Provider
+      value={{
+        isAuth: stateAuthReducer.isAuth,
+        currentUser: stateAuthReducer.currentUser,
+        token: stateAuthReducer.token,
+        handleUserLogin: (token) => handleLogin(token),
+        handleUserLogout: () => handleLogout(),
+        handleUserEdit: (data) => handleEdit(data)
+      }}
+    >
+      <BrowserRouter>
+        <Fragment>
+          <Routes>
+            <Route
+              exact
+              path='/main'
+              element={
+                <ProtectedRoute
+                  loggedIn={stateAuthReducer.isAuth}
+                  component={Content}
+                />
+              }
+            />
+            <Route
+              path='/signup'
+              element={
+                stateAuthReducer.isAuth ? <Navigate to='/main' /> : <Register />
+              }
+            />
+            <Route
+              path='/signin'
+              element={
+                stateAuthReducer.isAuth ? <Navigate to='/main' /> : <Login />
+              }
+            />
+            <Route
+              path='/signout'
+              element={
+                stateAuthReducer.isAuth ? <Logout /> : <Navigate to='/signin' />
+              }
+            />
+            <Route
+              path='/*'
+              element={
+                stateAuthReducer.isAuth ? (
+                  <Navigate to='/main' />
+                ) : (
+                  <Navigate to='/signin' />
+                )
+              }
+            />
+          </Routes>
+        </Fragment>
+      </BrowserRouter>
+    </CurrentUserContext.Provider>
   );
 }
 

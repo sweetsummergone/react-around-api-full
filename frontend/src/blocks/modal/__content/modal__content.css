@@ -1,7 +1,7 @@
 .modal__content {
   color: #000;
   min-width: 430px;
-  max-height: 330px;
+  min-height: 330px;
   margin: 0 auto;
   background: #fff;
   position: absolute;
@@ -17,7 +17,7 @@
 
 @media screen and (max-width: 879px) {
   .modal__content {
-    max-height: 322px;
+    min-height: 322px;
     min-width: 282px;
   }
 }

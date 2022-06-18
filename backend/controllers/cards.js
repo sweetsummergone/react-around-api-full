@@ -6,7 +6,7 @@ const { handleError } = require('../utils/utils');
 
 module.exports.getCards = (req, res) => {
   Card.find({})
-    .then((cards) => res.send({ cards }))
+    .then((cards) => res.send(cards.reverse()))
     .catch((err) => {
       const [status, error] = handleError(err);
       res.status(status).send({ message: `Error: ${error.message}` });
@@ -18,7 +18,7 @@ module.exports.createCard = (req, res) => {
   const { name, link, owner } = req.body;
 
   Card.create({ name, link, owner })
-    .then((card) => res.send({ data: card }))
+    .then((card) => res.send(card))
     .catch((err) => {
       const [status, error] = handleError(err);
       res.status(status).send({ message: `Error: ${error.message}` });

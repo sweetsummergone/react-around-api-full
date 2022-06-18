@@ -40,13 +40,14 @@ class Api {
         .then(this._checkResponse);
     }
 
-    saveCard({title, url}) {
+    saveCard({title, url, id}) {
         return fetch(`${this._baseUrl}/cards`, {
           method: "POST",
           headers: this._headers,
           body: JSON.stringify({
             name: title,
-            link: url
+            link: url,
+            owner: id
           })
         })
         
@@ -63,7 +64,7 @@ class Api {
     }
 
     addLike = (cardId) => {
-        return fetch(`${this._baseUrl}/cards/likes/${cardId}`, {
+        return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
             method: "PUT",
             headers: this._headers
         })
@@ -72,7 +73,7 @@ class Api {
     }
 
     removeLike = (cardId) => {
-        return fetch(`${this._baseUrl}/cards/likes/${cardId}`, {
+        return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
             method: "DELETE",
             headers: this._headers
         })
@@ -98,9 +99,9 @@ class Api {
 }
 
 const api = new Api({
-    baseUrl: "https://around.nomoreparties.co/v1/group-12", 
+    baseUrl: "http://localhost:3001", 
     headers: {
-        authorization: "613c39f3-4617-46e7-86c0-dd1b793af23e",
+        authorization: `Bearer ${localStorage.getItem('jwt')}`,
         "Content-Type": "application/json"
     }
 });
