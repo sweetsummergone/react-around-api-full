@@ -1,0 +1,5 @@
+.header__button_rotated {
+    transform: rotate(-45deg);
+    min-height: 24px;
+    min-width: 24px;
+}

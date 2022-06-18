@@ -1,0 +1,20 @@
+.info__whois {
+  margin: 0;
+  max-width: calc(880px - 150px - 120px);
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 22px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+@media screen and (max-width: 879px) {
+  .info__whois {
+    max-width: 282px;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: center;
+  }
+}

@@ -1,0 +1,9 @@
+@media screen and (max-width: 879px) {
+    .header__control_logout {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 142px;
+        border-bottom: 1px solid rgba(84, 84, 84, 0.7);
+    }
+}

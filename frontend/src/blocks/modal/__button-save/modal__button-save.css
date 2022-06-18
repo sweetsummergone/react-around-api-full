@@ -1,0 +1,31 @@
+.modal__button-save {
+  padding: 0;
+  cursor: pointer;
+  margin-top: 47px;
+  min-width: 358px;
+  min-height: 50.15px;
+  border: none;
+  color: white;
+  background: #000;
+  border-radius: 2px;
+  font-size: 18px;
+  line-height: 22px;
+  /* transition */
+  transition: opacity 0.35s ease-in-out;
+  -moz-transition: opacity 0.35s ease-in-out;
+  -webkit-transition: opacity 0.35s ease-in-out;
+  -o-transition: opacity 0.35s ease-in-out;
+  -ms-transition: opacity 0.35s ease-in-out;
+}
+
+.modal__button-save:hover {
+  opacity: 0.8;
+}
+
+@media screen and (max-width: 879px) {
+  .modal__button-save {
+    min-width: 238px;
+    font-size: 14px;
+    line-height: 17px;
+  }
+}

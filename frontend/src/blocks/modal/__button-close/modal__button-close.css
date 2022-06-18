@@ -1,0 +1,32 @@
+.modal__button-close {
+  background: url("../../../images/plus.svg") no-repeat center;
+  background-size: cover;
+  padding: 0;
+  cursor: pointer;
+  position: absolute;
+  right: -40px;
+  top: -40px;
+  min-height: 40px;
+  min-width: 40px;
+  transform: rotate(-45deg);
+  border: none;
+  /* transition */
+  transition: opacity 0.35s ease-in-out;
+  -moz-transition: opacity 0.35s ease-in-out;
+  -webkit-transition: opacity 0.35s ease-in-out;
+  -o-transition: opacity 0.35s ease-in-out;
+  -ms-transition: opacity 0.35s ease-in-out;
+}
+
+.modal__button-close:hover {
+  opacity: 0.6;
+}
+
+@media screen and (max-width: 879px) {
+  .modal__button-close {
+    min-height: 26px;
+    min-width: 26px;
+    right: 3px;
+    top: calc(-68.24px + 22px);
+  }
+}
