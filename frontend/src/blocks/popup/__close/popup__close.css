@@ -1,0 +1,12 @@
+.popup__close {
+    max-width: 30px;
+    max-height: 30px;
+}
+
+@media screen and (max-width: 879px) {
+    .popup__close {
+        /* Sorry, I don't know how to make position to right corner */
+        position: sticky;
+        right: 0;
+    }
+}

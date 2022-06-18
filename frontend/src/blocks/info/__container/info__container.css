@@ -1,0 +1,11 @@
+.info__container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+@media screen and (max-width: 879px) {
+  .info__container {
+    margin-bottom: 8px;
+  }
+}

@@ -1,0 +1,22 @@
+.likes__like {
+  padding: 0;
+  border: none;
+  background: none;
+  background-image: url("../../../images/like.svg");
+  background-repeat: no-repeat;
+  min-height: 19px;
+  min-width: 21px;
+  cursor: pointer;
+  margin-left: auto;
+  transition: all 0.5s;
+}
+
+.cards__like:hover {
+  opacity: 0.5;
+}
+
+@media screen and (max-width: 320px) {
+  .cards__like {
+    margin: 0 4px 7px auto;
+  }
+}
