@@ -1,0 +1,17 @@
+.modal__input-error_active {
+    position: absolute;
+    max-width: 362px;
+    color: red;
+    font-size: 10px;
+    margin-bottom: 0;
+}
+
+@media screen and (max-width: 879px) {    
+    .modal__input-error_active {
+        position: absolute;
+        max-width: 242px;
+        color: red;
+        font-size: 10px;
+        margin-bottom: 0;
+    }
+}

@@ -1,0 +1,14 @@
+.popup {
+    position: fixed;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  
+@media screen and (max-width: 879px) {
+    .popup {
+        max-width: 240px;
+        overflow: hidden;
+    }
+}

@@ -1,0 +1,10 @@
+.modal_popup {
+  position: fixed;
+}
+
+  
+@media screen and (max-width: 879px) {
+  .modal_popup {
+    max-width: 240px;
+  }
+}

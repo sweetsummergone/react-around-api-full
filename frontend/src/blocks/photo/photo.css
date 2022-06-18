@@ -1,0 +1,22 @@
+.photo {
+    position: relative;
+    cursor: pointer;
+}
+
+.photo:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.photo:hover .photo__edit {
+    opacity: 1;
+}
+
+.photo:hover .photo__overlay {
+    opacity: 1;
+}
+
+@media screen and (max-width: 879px) {
+    .photo {
+        margin-bottom: 30px;
+    }
+}

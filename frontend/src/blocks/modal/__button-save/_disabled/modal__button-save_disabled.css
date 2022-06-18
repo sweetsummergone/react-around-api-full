@@ -1,0 +1,10 @@
+.modal__button-save_disabled {
+  background: white;
+  color: gray;
+  border: 1px solid gray;
+}
+
+.modal__button-save_disabled:hover {
+  cursor: default;
+  opacity: 1;
+}

@@ -1,0 +1,27 @@
+.form__tooltip {
+    margin: 0;
+    margin-top: 15px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    /* identical to box height */
+
+    text-align: center;
+
+    color: #FFFFFF;
+}
+
+.form__tooltip a {
+    text-decoration: none;
+    color: #FFF;
+}
+
+@media screen and (max-width: 879px) {
+    .form__tooltip {
+        margin-top: 20px;
+        font-size: 12px;
+        line-height: 15px;
+    }
+}
