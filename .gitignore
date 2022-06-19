@@ -8,6 +8,7 @@ node_modules
 
 # Build
 build
+static
 
 # Optional npm cache directory
 .npm
