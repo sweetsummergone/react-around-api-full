@@ -45,11 +45,6 @@ app.get('/crash-test', () => {
     throw new ErrorHandler(500, 'Server will crash now');
   }, 0);
 });
-app.post('/signin', login);
-app.post('/signup', createUser);
-app.get('*', (req, res) => {
-  res.status(404).json({ message: 'Requested resource not found' });
-});
 
 app.use(errorLogger);
 
