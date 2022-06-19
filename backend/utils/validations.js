@@ -1,16 +1,61 @@
 const Joi = require('joi');
+Joi.objectId = require('joi-objectid')(Joi);
 
-const validatedUserSchema = Joi.object().keys({
-  email: Joi.string().max(42).required().email({ minDomainSegments: 2 }),
+// User
 
-  password: Joi.string().required().min(8).max(32)
-    .required(),
+const validatedCreateOrLoginUserSchema = {
+  body: Joi.object().keys({
+    email: Joi.string().max(42).required().email({ minDomainSegments: 2 }),
 
-  name: Joi.string().min(2).max(30),
+    password: Joi.string().required().min(8).max(32)
+      .required(),
 
-  about: Joi.string().min(2).max(30),
+    name: Joi.string().min(2).max(30),
 
-  avatar: Joi.string().uri(),
-});
+    about: Joi.string().min(2).max(30),
 
-module.exports = { validatedUserSchema };
+    avatar: Joi.string().uri(),
+  }),
+};
+
+const validatedUpdateUserSchema = {
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30).required(),
+
+    about: Joi.string().min(2).max(30).required(),
+  }),
+};
+
+const validatedUpdateAvatarUserSchema = {
+  body: Joi.object().keys({
+    avatar: Joi.string().uri().required(),
+  }),
+};
+
+// Card
+
+const validatedCreateCardSchema = {
+  body: Joi.object().keys({
+    name: Joi.string().max(30).min(2).required(),
+
+    link: Joi.string().required().uri(),
+
+    owner: Joi.objectId().required(),
+
+    likes: Joi.array(),
+  }),
+};
+
+const validatedDeleteCardSchema = {
+  body: Joi.object().keys({
+    owner: Joi.objectId().required(),
+  }),
+};
+
+module.exports = {
+  validatedCreateOrLoginUserSchema,
+  validatedUpdateUserSchema,
+  validatedUpdateAvatarUserSchema,
+  validatedCreateCardSchema,
+  validatedDeleteCardSchema,
+};

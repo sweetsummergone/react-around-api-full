@@ -1,5 +1,6 @@
 // middleware/auth.js
 const jwt = require('jsonwebtoken');
+const { ErrorHandler } = require('../utils/error');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -8,9 +9,7 @@ module.exports = (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    return res
-      .status(401)
-      .send({ message: 'Authorization Required' });
+    throw new ErrorHandler(401, 'Authorization Required');
   }
 
   const token = authorization.replace('Bearer ', '');
@@ -19,9 +18,7 @@ module.exports = (req, res, next) => {
   try {
     payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
   } catch (err) {
-    return res
-      .status(401)
-      .send({ message: 'Authorization Required' });
+    next(err);
   }
 
   req.user = payload; // assigning the payload to the request object

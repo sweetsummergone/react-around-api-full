@@ -1,52 +1,47 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
-const { handleError } = require('../utils/utils');
+// const { handleError } = require('../utils/utils');
+const { ErrorHandler } = require('../utils/error');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
-module.exports.getUsers = (req, res) => {
+module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send({ users }))
-    .catch((err) => res.status(500).send({ message: `Error: ${err}` }));
+    .catch((err) => {
+      next(err);
+    });
 };
 
 // the getUser request handler
-module.exports.getUser = (req, res) => {
+module.exports.getUser = (req, res, next) => {
   User.findById(req.user._id)
     .orFail(() => {
-      const error = new Error('No user found with that id');
-      error.name = 'DocumentNotFoundError';
-      error.statusCode = 404;
-      throw error;
+      throw new ErrorHandler(404, `No user found with ${req.user._id}`);
     })
     .then((user) => res.send(user))
     .catch((err) => {
-      const [status, error] = handleError(err);
-      res.status(status).send({ message: `Error: ${error.message}` });
+      next(err);
     });
 };
 
 // the createUser request handler
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-  User.validateUser({
-    name, about, avatar, email, password,
-  })
-    .then((user) => bcrypt.hash(user.password, 10))
+  bcrypt.hash(password, 10)
     .then((hash) => User.create({
       name, about, avatar, email, password: hash,
     }))
     .then((finalData) => res.send({ user: finalData }))
     .catch((err) => {
-      const [status, error] = handleError(err);
-      res.status(status).send({ message: `Error: ${error.message}` });
+      next(err);
     });
 };
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
@@ -58,12 +53,11 @@ module.exports.login = (req, res) => {
       res.send({ token });
     })
     .catch((err) => {
-      // authentication error
-      res.status(401).send({ message: err.message });
+      next(err);
     });
 };
 
-module.exports.updateUser = (req, res) => {
+module.exports.updateUser = (req, res, next) => {
   User.findByIdAndUpdate(
     req.user._id,
     {
@@ -77,12 +71,11 @@ module.exports.updateUser = (req, res) => {
   )
     .then((user) => res.send(user))
     .catch((err) => {
-      const [status, error] = handleError(err);
-      res.status(status).send({ message: `Error: ${error.message}` });
+      next(err);
     });
 };
 
-module.exports.updateAvatar = (req, res) => {
+module.exports.updateAvatar = (req, res, next) => {
   User.findByIdAndUpdate(
     req.user._id,
     {
@@ -95,7 +88,6 @@ module.exports.updateAvatar = (req, res) => {
   )
     .then((user) => res.send(user))
     .catch((err) => {
-      const [status, error] = handleError(err);
-      res.status(status).send({ message: `Error: ${error.message}` });
+      next(err);
     });
 };

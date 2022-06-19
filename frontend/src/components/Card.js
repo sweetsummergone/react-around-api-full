@@ -5,9 +5,6 @@ function Card({ card, onCardClick, onCardDelete, onCardLike }) {
   const { currentUser } = useContext(CurrentUserContext);
   const isOwn = card.owner === currentUser._id;
   const isLiked = card.likes.some((user) => user === currentUser._id);
-  const cardDeleteButtonClassName = `${
-    isOwn ? "cards__delete" : "cards__delete hidden"
-  }`;
   const cardLikeButtonClassName = `${
     isLiked ? "likes__like likes__like_liked" : "likes__like"
   }`;
@@ -21,16 +18,16 @@ function Card({ card, onCardClick, onCardDelete, onCardLike }) {
   }
 
   function handleDeleteClick() {
-    onCardDelete(card._id);
+    onCardDelete(card._id, card.owner);
   }
 
   return (
     <li className="cards__card">
-      <button
+      {isOwn && <button
         type="button"
-        className={cardDeleteButtonClassName}
+        className="cards__delete"
         onClick={handleDeleteClick}
-      />
+      />}
       <img
         src={card.link}
         alt={card.name}

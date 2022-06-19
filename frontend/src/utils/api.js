@@ -54,10 +54,13 @@ class Api {
         .then(this._checkResponse);
       }
       
-    deleteCard = (id) => {
+    deleteCard = ({id, ownerId}) => {
         return fetch(`${this._baseUrl}/cards/${id}`, {
             method: "DELETE",
-            headers: this._headers
+            headers: this._headers,
+            body: JSON.stringify({
+                owner: ownerId
+            })
         })
         
         .then(this._checkResponse);

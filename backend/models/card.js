@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { ErrorHandler } = require('../utils/error');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -18,7 +19,7 @@ const cardSchema = new mongoose.Schema({
     },
   },
   owner: {
-    type: String,
+    type: mongoose.Types.ObjectId,
     required: [true, 'Owner ID is required'],
   },
   likes: {
@@ -26,5 +27,15 @@ const cardSchema = new mongoose.Schema({
     default: [],
   },
 });
+
+cardSchema.statics.authAndDelete = function authAndDelete({ cardId, reqUserId, ownerId }) {
+  if (reqUserId === ownerId) {
+    return this.deleteOne({ _id: cardId })
+      .orFail(() => {
+        throw new ErrorHandler(404, `No card found with ${cardId}`);
+      });
+  }
+  return Promise.reject(new ErrorHandler(403, 'Access denied'));
+};
 
 module.exports = mongoose.model('card', cardSchema);

@@ -97,9 +97,9 @@ function Content() {
     }
   }
 
-  function handleCardDelete(cardId) {
+  function handleCardDelete(cardId, owner) {
     api
-      .deleteCard(cardId)
+      .deleteCard({id: cardId, ownerId: owner})
       .then(() => {
         setCards(cards.filter((card) => card._id !== cardId));
       })
