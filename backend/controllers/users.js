@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
-// const { handleError } = require('../utils/utils');
 const { ErrorHandler } = require('../utils/error');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
@@ -16,9 +15,10 @@ module.exports.getUsers = (req, res, next) => {
 
 // the getUser request handler
 module.exports.getUser = (req, res, next) => {
-  User.findById(req.user._id)
+  const userId = req.params.userId ? req.params.userId : req.user._id;
+  User.findById(userId)
     .orFail(() => {
-      throw new ErrorHandler(404, `No user found with ${req.user._id}`);
+      throw new ErrorHandler(404, `No user found with ID ${userId}`);
     })
     .then((user) => res.send(user))
     .catch((err) => {

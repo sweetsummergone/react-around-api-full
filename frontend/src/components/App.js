@@ -37,6 +37,7 @@ function App() {
 
   const handleLogout = () => {
     dispatchAuthReducer(ACTIONS.logout());
+    auth.logout();
   };
 
   const handleEdit = (data) => {

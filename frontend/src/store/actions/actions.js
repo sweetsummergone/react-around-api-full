@@ -9,7 +9,6 @@ export const login = ({user, token}) => {
   };
   
   export const logout = () => {
-    localStorage.removeItem("jwt");
     return {
       type: ACTION_TYPES.LOGOUT,
     };

@@ -1,10 +1,18 @@
 const catchError = (err, res) => {
-  const { statusCode, message } = err;
-  res.status(statusCode).json({
-    status: 'error',
-    statusCode,
-    message,
-  });
+  const { code, statusCode, message } = err;
+  if (statusCode) {
+    res.status(statusCode).json({
+      status: 'error',
+      statusCode,
+      message,
+    });
+  } else if (code && code === 11000) {
+    res.status(403).json({
+      status: 'error',
+      statusCode: 403,
+      message: 'Email is already used',
+    });
+  }
 };
 
 class ErrorHandler extends Error {

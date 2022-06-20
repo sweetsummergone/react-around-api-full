@@ -1,3 +1,4 @@
+const { Segments } = require('celebrate');
 const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
 
@@ -15,6 +16,12 @@ const validatedCreateOrLoginUserSchema = {
     about: Joi.string().min(2).max(30),
 
     avatar: Joi.string().uri(),
+  }),
+};
+
+const validatedGetSpecifiedUserSchema = {
+  [Segments.PARAMS]: Joi.object().keys({
+    userId: Joi.objectId().required(),
   }),
 };
 
@@ -52,10 +59,18 @@ const validatedDeleteCardSchema = {
   }),
 };
 
+const validateLikeOrDislikeCard = {
+  [Segments.PARAMS]: Joi.object().keys({
+    cardId: Joi.objectId().required(),
+  }),
+};
+
 module.exports = {
   validatedCreateOrLoginUserSchema,
+  validatedGetSpecifiedUserSchema,
   validatedUpdateUserSchema,
   validatedUpdateAvatarUserSchema,
   validatedCreateCardSchema,
   validatedDeleteCardSchema,
+  validateLikeOrDislikeCard,
 };

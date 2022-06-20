@@ -9,7 +9,7 @@ class Api {
             return res.json();
         }
 
-        return Promise.reject(`Error: ${res.status}`);
+        return Promise.reject(`Error ${res.status}: ${res.statusText}`);
     }
 
     getUser() {

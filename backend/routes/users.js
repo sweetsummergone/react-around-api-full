@@ -3,12 +3,12 @@ const router = require('express').Router();
 const { celebrate } = require('celebrate');
 
 const { getUsers, getUser, updateUser, updateAvatar } = require('../controllers/users');
-const { validatedUpdateUserSchema, validatedUpdateAvatarUserSchema } = require('../utils/validations');
+const { validatedUpdateUserSchema, validatedUpdateAvatarUserSchema, validatedGetSpecifiedUserSchema } = require('../utils/validations');
 
 // route definitions
 router.get('/', getUsers);
-router.get('/:userId', getUser);
 router.get('/me', getUser);
+router.get('/:userId', celebrate(validatedGetSpecifiedUserSchema), getUser);
 router.patch('/me', celebrate(validatedUpdateUserSchema), updateUser);
 router.patch('/me/avatar', celebrate(validatedUpdateAvatarUserSchema), updateAvatar);
 

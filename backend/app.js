@@ -9,7 +9,7 @@ const routerUsers = require('./routes/users');
 const routerCards = require('./routes/cards');
 
 const app = express();
-const { PORT = 3000 } = process.env;
+const { PORT = 3001 } = process.env;
 const { createUser, login } = require('./controllers/users');
 const { catchError, ErrorHandler } = require('./utils/error');
 const auth = require('./middlewares/auth');
